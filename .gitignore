@@ -1,0 +1,39 @@
+# 🚫 Python cache and compiled files
+__pycache__/
+*.py[cod]
+*.pyo
+
+# 🐍 Virtual environment
+venv/
+env/
+ENV/
+.venv/
+.VENV/
+
+# 📝 Environment variables
+.env
+.env.*
+
+# 🔍 VSCode config (optional, if you use it)
+.vscode/
+
+# 📁 Python package metadata
+*.egg-info/
+dist/
+build/
+
+# 📊 Coverage/test reports (if using pytest or coverage)
+htmlcov/
+.coverage
+.cache/
+nosetests.xml
+coverage.xml
+*.cover
+
+# 📦 pip dependency lock files (if generated)
+poetry.lock
+Pipfile.lock
+
+# 🧪 Unit test result logs
+test-results/
+*.log
