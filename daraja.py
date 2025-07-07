@@ -19,10 +19,10 @@ async def get_token():
         )
         return res.json()["access_token"]
 
-async def trigger_stk_puch(msisdn: str, amount: int):
+async def trigger_stk_push(msisdn: str, amount: int):
     timestamp = datetime.now().strftime('%Y%m%d%H%M%S')
-    password = base64.b64encode((SHORTCODE + PASSKEY + timestamp).encode()).decode
-    token = await get_token
+    password = base64.b64encode((SHORTCODE + PASSKEY + timestamp).encode()).decode()
+    token = await get_token()
     
     payload = {
         "BusinessShortCode": SHORTCODE,    
@@ -35,8 +35,8 @@ async def trigger_stk_puch(msisdn: str, amount: int):
         "PhoneNumber": msisdn,    
         "CallBackURL": CALLBACK_URL,    
         "AccountReference": "Rop n Sons",    
-        "TransactionDesc": "The Family Business"
-    }
+        "TransactionDesc": "Family Biz"
+        }
     
     headers = {"Authorization": f"Bearer {token}"}
     async with httpx.AsyncClient() as client:
@@ -45,4 +45,4 @@ async def trigger_stk_puch(msisdn: str, amount: int):
             headers=headers,
             json=payload
         )
-        return response.json
+        return response.json()
