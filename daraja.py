@@ -10,11 +10,12 @@ PASSKEY = getenv("DARAJA_PASSKEY")
 CONSUMER_KEY = getenv("DARAJA_CONSUMER_KEY")
 CONSUMER_SECRET = getenv("DARAJA_CONSUMER_SECRET")
 CALLBACK_URL = getenv("DARAJA_CALLBACK_URL")
+ENDPOINT = getenv("DARAJA_ENDPOINT")
 
 async def get_token():
     async with httpx.AsyncClient() as client:
         res = await client.get(
-            "https://sandbox.safaricom.co.ke/oauth/v1/generate?grant_type=client_credentials",
+            ENDPOINT,
             auth=(CONSUMER_KEY,CONSUMER_SECRET)
         )
         return res.json()["access_token"]
