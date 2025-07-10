@@ -23,7 +23,6 @@ async def get_token():
     
     # if token is still valid, use it
     if token_cache["access_token"] and current_time < token_cache["expires_at"]:
-        print(token_cache["access_token"])
         return token_cache["access_token"]
     
     # get a new token if it's invalid
@@ -34,13 +33,13 @@ async def get_token():
         )
         res_data = res.json()
         access_token = res_data["access_token"]
-        expires_in = res_data.get("expires_in", 3599)
+        expires_in_string = res_data.get("expires_in", 3599)
+        expires_in = float(expires_in_string)
         
         # save token and expiry
         token_cache["access_token"] = access_token
-        token_cache["expires_at"] = current_time + expires_in - 60
+        token_cache["expires_at"] = current_time + (expires_in - 60)
         
-        print(access_token)
         return access_token
 
 async def trigger_stk_push(msisdn: str, amount: int):
