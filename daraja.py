@@ -1,4 +1,5 @@
 import httpx, base64
+import time
 from datetime import datetime
 from os import getenv
 from dotenv import load_dotenv
@@ -10,15 +11,37 @@ PASSKEY = getenv("DARAJA_PASSKEY")
 CONSUMER_KEY = getenv("DARAJA_CONSUMER_KEY")
 CONSUMER_SECRET = getenv("DARAJA_CONSUMER_SECRET")
 CALLBACK_URL = getenv("DARAJA_CALLBACK_URL")
-ENDPOINT = getenv("DARAJA_ENDPOINT")
+ENDPOINT = getenv("AUTH_ENDPOINT")
+
+token_cache = {
+    "access_token": None,
+    "expires_at": 0
+}
 
 async def get_token():
+    current_time = time.time()
+    
+    # if token is still valid, use it
+    if token_cache["access_token"] and current_time < token_cache["expires_at"]:
+        print(token_cache["access_token"])
+        return token_cache["access_token"]
+    
+    # get a new token if it's invalid
     async with httpx.AsyncClient() as client:
         res = await client.get(
             ENDPOINT,
             auth=(CONSUMER_KEY,CONSUMER_SECRET)
         )
-        return res.json()["access_token"]
+        res_data = res.json()
+        access_token = res_data["access_token"]
+        expires_in = res_data.get("expires_in", 3599)
+        
+        # save token and expiry
+        token_cache["access_token"] = access_token
+        token_cache["expires_at"] = current_time + expires_in - 60
+        
+        print(access_token)
+        return access_token
 
 async def trigger_stk_push(msisdn: str, amount: int):
     timestamp = datetime.now().strftime('%Y%m%d%H%M%S')
