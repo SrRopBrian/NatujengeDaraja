@@ -1,7 +1,7 @@
-from fastapi import FastAPI
+from fastapi import FastAPI, HTTPException
 from fastapi.responses import HTMLResponse
 from pydantic import BaseModel
-from daraja import trigger_stk_push
+from daraja import trigger_stk_push, DarajaAPIError
 from fastapi.middleware.cors import CORSMiddleware
 
 app = FastAPI()
@@ -35,5 +35,8 @@ async def landing_page():
 
 @app.post("/stkpush")
 async def stk_push(data: PaymentRequest):
-    response = await trigger_stk_push(data.msisdn, data.amount)
-    return response
+    try:
+        response = await trigger_stk_push(data.msisdn, data.amount)
+        return response
+    except DarajaAPIError as e:
+        raise HTTPException(status_code=e.status_code, detail=e.message)
