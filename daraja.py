@@ -15,7 +15,7 @@ ENDPOINT = getenv("AUTH_ENDPOINT")
 class DarajaAPIError(Exception):
     def __init__(self, message: str, status_code: int = 400):
         self.message = message
-        self.status_coce = status_code
+        self.status_code = status_code
         super().__init__(message)
 
 token_cache = {
